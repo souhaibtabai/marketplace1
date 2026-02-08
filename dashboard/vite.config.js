@@ -7,7 +7,12 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ["lucide-react"],
   },
+  build: {
+    outDir: "dist",
+  },
+
   server: {
+    historyApiFallback: true,
     port: 5174,
     proxy: {
       "/api": {

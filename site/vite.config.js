@@ -18,8 +18,12 @@ export default defineConfig({
       },
     }),
   ],
+  build: {
+    outDir: "dist",
+  },
 
   server: {
+    historyApiFallback: true,
     port: 5173,
     proxy: {
       "/api": {
