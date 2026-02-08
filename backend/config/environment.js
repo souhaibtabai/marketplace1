@@ -15,7 +15,10 @@ const config = {
     // CORS configuration - supports multiple domains separated by comma
     corsOrigin: process.env.CORS_ORIGIN
       ? process.env.CORS_ORIGIN.split(",").map((url) => url.trim())
-      : ["http://localhost:5173", "http://localhost:5174"],
+      : [
+          "https://marketplace-site-a8bm.onrender.com/",
+          "https://marketplace-dashboard-tfqs.onrender.com",
+        ],
   },
   database: {
     host: process.env.DB_HOST || "localhost",
