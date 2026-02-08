@@ -72,13 +72,9 @@ export const api = {
   },
 
   async addToCart(productId, quantity = 1) {
-    return fetch("http://localhost:5000/api/cart/add", {
+    return fetch(`${api.baseURL}/cart/add`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwiZW1haWwiOiJjbGllbnQxQGV4YW1wbGUuY29tIiwicm9sZSI6IkNMSUVOVCIsImlhdCI6MTc2Mzc2ODgzOSwiZXhwIjoxNzYzODU1MjM5fQ.gofRk5sQJn1MVIG9DtEy_BKPh_mb-r7SpTAR8HhfsGM",
-      },
+      headers: api.getHeaders(),
       body: JSON.stringify({
         id_produit: productId,
         quantity: quantity,

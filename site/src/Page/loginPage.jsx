@@ -43,7 +43,9 @@ const LoginPage = () => {
         if (["admin", "vendor", "livreur"].includes(userRole)) {
           const token = localStorage.getItem("token");
           const userData = localStorage.getItem("user");
-          const dashboardUrl = new URL("http://localhost:5174/dashboard");
+          const dashboardUrl = new URL(
+            import.meta.env.VITE_DASHBOARD_URL || "http://localhost:5174/dashboard"
+          );
           dashboardUrl.searchParams.set("token", token);
           dashboardUrl.searchParams.set("user", encodeURIComponent(userData));
           window.location.href = dashboardUrl.toString();
@@ -107,7 +109,9 @@ const LoginPage = () => {
         const user = localStorage.getItem("user");
 
         // Pass token and user via URL parameters (will be removed by dashboard)
-        const dashboardUrl = new URL("http://localhost:5174/dashboard");
+        const dashboardUrl = new URL(
+          import.meta.env.VITE_DASHBOARD_URL || "http://localhost:5174/dashboard"
+        );
         dashboardUrl.searchParams.set("token", token);
         dashboardUrl.searchParams.set("user", encodeURIComponent(user));
 
