@@ -161,15 +161,16 @@ export const AuthProvider = ({ children }) => {
       new StorageEvent("storage", {
         key: "token",
         newValue: null,
-      })
+      }),
     );
 
     window.dispatchEvent(new CustomEvent("auth-update"));
 
     console.log("🔄 Redirecting to login page with logout flag...");
 
-    // Redirect with logout flag so site knows to clear its localStorage
-    window.location.replace("http://localhost:5173/login?logout=true");
+    // ⚠️ UPDATE THIS URL to your production site URL when deploying
+    const SITE_URL = import.meta.env.VITE_SITE_URL || "http://localhost:5173";
+    window.location.replace(`${SITE_URL}/login?logout=true`);
   };
 
   const value = {

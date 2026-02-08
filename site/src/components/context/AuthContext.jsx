@@ -2,6 +2,11 @@ import React, { useState, useEffect, createContext, useContext } from "react";
 
 const AuthContext = createContext();
 
+// Get API URL from environment variable
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
+console.log("🔧 Site API URL configured as:", API_URL);
+
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
@@ -82,9 +87,10 @@ export const AuthProvider = ({ children }) => {
         email: credentials.email,
         passwordLength: credentials.password?.length,
         hasPassword: !!credentials.password,
+        apiUrl: API_URL, // Log which API we're calling
       });
 
-      const response = await fetch("/api/login", {
+      const response = await fetch(`${API_URL}/api/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -96,7 +102,7 @@ export const AuthProvider = ({ children }) => {
       console.log("📡 Login response status:", response.status);
       console.log(
         "📡 Login response headers:",
-        Object.fromEntries(response.headers.entries())
+        Object.fromEntries(response.headers.entries()),
       );
 
       const data = await response.json();
@@ -143,7 +149,7 @@ export const AuthProvider = ({ children }) => {
           new StorageEvent("storage", {
             key: "token",
             newValue: data.token,
-          })
+          }),
         );
 
         return { success: true, user: data.user };
@@ -166,7 +172,7 @@ export const AuthProvider = ({ children }) => {
     try {
       console.log("📝 Registration attempt");
 
-      const response = await fetch("/api/register", {
+      const response = await fetch(`${API_URL}/api/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -192,7 +198,7 @@ export const AuthProvider = ({ children }) => {
           new StorageEvent("storage", {
             key: "token",
             newValue: data.token,
-          })
+          }),
         );
 
         return { success: true, user: data.user };
@@ -220,7 +226,7 @@ export const AuthProvider = ({ children }) => {
       new StorageEvent("storage", {
         key: "token",
         newValue: null,
-      })
+      }),
     );
 
     // Dispatch custom event for same-tab updates
@@ -231,7 +237,7 @@ export const AuthProvider = ({ children }) => {
   const testBackendConnection = async () => {
     try {
       console.log("🔍 Testing backend connection...");
-      const response = await fetch("/api/test", {
+      const response = await fetch(`${API_URL}/api/health`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
