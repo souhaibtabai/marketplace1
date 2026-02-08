@@ -33,7 +33,7 @@ const PrivateRoute = ({ children, allowedRoles = [] }) => {
   // If not authenticated, redirect to site login
   if (!isAuthenticated) {
     console.log(
-      "❌ PrivateRoute: Not authenticated - redirecting to login with logout flag"
+      "❌ PrivateRoute: Not authenticated - redirecting to login with logout flag",
     );
     console.log("📦 localStorage token:", localStorage.getItem("token"));
     console.log("📦 localStorage user:", localStorage.getItem("user"));
@@ -56,18 +56,19 @@ const PrivateRoute = ({ children, allowedRoles = [] }) => {
     // If client somehow got here, redirect to site home
     if (userRole === "client") {
       console.log(
-        "⚠️ PrivateRoute: Client trying to access dashboard - redirecting to home"
+        "⚠️ PrivateRoute: Client trying to access dashboard - redirecting to home",
       );
-      window.location.href = "http://localhost:5173/home";
+      window.location.href =
+        "https://marketplace-dashboard-tfqs.onrender.com/home";
       return null;
     }
 
     // Check if user has required role
     if (allowedRoles.length > 0 && !allowedRoles.includes(userRole)) {
       console.log(
-        "⚠️ PrivateRoute: User role not in allowed roles - redirecting to login"
+        "⚠️ PrivateRoute: User role not in allowed roles - redirecting to login",
       );
-      window.location.href = "http://localhost:5173/login";
+      window.location.href = "https://marketplace-site-a8bm.onrender.com/login";
       return null;
     }
   }
