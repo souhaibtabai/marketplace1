@@ -27,7 +27,7 @@ const PrivateRoute = ({ children, allowedRoles = [] }) => {
     // Site-specific logic - redirect non-clients to dashboard
     if (["admin", "vendor", "livreur"].includes(userRole)) {
       window.location.href =
-        "https://marketplace-dashboard-tfqs.onrender.com/dashboard";
+        "https://marketplace-dashboard-tfqs.onrender.com/dashboard/";
       return null;
     }
 
