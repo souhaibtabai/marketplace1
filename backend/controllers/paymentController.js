@@ -1,4 +1,5 @@
 const { sequelize } = require("../config/database");
+const { USER_ROLES } = require("../config/constants");
 
 const PAYMENT_STATUS = {
   PENDING: "PENDING",
@@ -72,7 +73,7 @@ class PaymentController {
       // Generate transaction ID
       const transaction_id = `TXN-${Date.now()}-${Math.random()
         .toString(36)
-        .substr(2, 9)
+        .substring(2, 11)
         .toUpperCase()}`;
 
       // Create payment record
@@ -204,7 +205,7 @@ class PaymentController {
       // Check authorization
       if (
         req.user.role !== "admin" &&
-        req.user.role !== "VENDOR" &&
+        req.user.role !== USER_ROLES.VENDOR &&
         payment.id_utilisateur !== req.user.id_utilisateur
       ) {
         return res.status(403).json({ message: "Unauthorized access." });

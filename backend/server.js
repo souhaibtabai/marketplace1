@@ -81,7 +81,7 @@ async function startServer() {
           // Allow requests with no origin (like mobile apps or curl requests)
           if (!origin) return callback(null, true);
           
-          if (allowedOrigins.indexOf(origin) !== -1) {
+          if (allowedOrigins.includes(origin)) {
             callback(null, true);
           } else {
             console.warn(`CORS blocked origin: ${origin}`);
