@@ -39,7 +39,8 @@ const PrivateRoute = ({ children, allowedRoles = [] }) => {
     console.log("📦 localStorage user:", localStorage.getItem("user"));
 
     // Add logout=true to ensure site clears its localStorage
-    window.location.href = "http://localhost:5173/login?logout=true";
+    window.location.href =
+      "https://marketplace-site-a8bm.onrender.com/login?logout=true";
     return null;
   }
 

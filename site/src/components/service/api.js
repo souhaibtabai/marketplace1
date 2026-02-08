@@ -72,7 +72,7 @@ export const api = {
   },
 
   async addToCart(productId, quantity = 1) {
-    return fetch("http://localhost:5000/api/cart/add", {
+    return fetch("https://marketplacetun.onrender.com/api/cart/add", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -169,7 +169,9 @@ export const AuthProvider = ({ children }) => {
     console.log("🔄 Redirecting to login page with logout flag...");
 
     // ⚠️ UPDATE THIS URL to your production site URL when deploying
-    const SITE_URL = import.meta.env.VITE_SITE_URL || "http://localhost:5173";
+    const SITE_URL =
+      import.meta.env.VITE_SITE_URL ||
+      "https://marketplace-site-a8bm.onrender.com";
     window.location.replace(`${SITE_URL}/login?logout=true`);
   };
 

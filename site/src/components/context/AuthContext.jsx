@@ -3,7 +3,8 @@ import React, { useState, useEffect, createContext, useContext } from "react";
 const AuthContext = createContext();
 
 // Get API URL from environment variable
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const API_URL =
+  import.meta.env.VITE_API_URL || "https://marketplacetun.onrender.com";
 
 console.log("🔧 Site API URL configured as:", API_URL);
 
