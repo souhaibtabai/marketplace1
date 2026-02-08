@@ -19,7 +19,7 @@ const LoginPage = () => {
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get("logout") === "true") {
       console.log(
-        "🚪 Logout detected - clearing site localStorage and auth state"
+        "🚪 Logout detected - clearing site localStorage and auth state",
       );
 
       // Call the logout function to clear state
@@ -43,7 +43,9 @@ const LoginPage = () => {
         if (["admin", "vendor", "livreur"].includes(userRole)) {
           const token = localStorage.getItem("token");
           const userData = localStorage.getItem("user");
-          const dashboardUrl = new URL("http://localhost:5174/dashboard");
+          const dashboardUrl = new URL(
+            "https://marketplace-dashboard-tfqs.onrender.com/dashboard",
+          );
           dashboardUrl.searchParams.set("token", token);
           dashboardUrl.searchParams.set("user", encodeURIComponent(userData));
           window.location.href = dashboardUrl.toString();
@@ -107,7 +109,9 @@ const LoginPage = () => {
         const user = localStorage.getItem("user");
 
         // Pass token and user via URL parameters (will be removed by dashboard)
-        const dashboardUrl = new URL("http://localhost:5174/dashboard");
+        const dashboardUrl = new URL(
+          "https://marketplace-dashboard-tfqs.onrender.comdashboard",
+        );
         dashboardUrl.searchParams.set("token", token);
         dashboardUrl.searchParams.set("user", encodeURIComponent(user));
 
