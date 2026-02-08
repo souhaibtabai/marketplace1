@@ -19,6 +19,7 @@ const productRoutes = require("./routes/productRoutes");
 const marketRoutes = require("./routes/marketRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const cartRoutes = require("./routes/cartRoutes");
+const paymentRoutes = require("./routes/paymentRoutes");
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -68,21 +69,25 @@ async function startServer() {
     app.use("/api", limiter);
 
     app.use("/api/auth", authLimiter);
-    app.use(
-      cors({
-        origin: "http://localhost:5173", // your frontend dev server
-        credentials: true, // if you send cookies or auth headers
-      })
-    );
 
-    // Your routes...
-    app.post("/api/cart/add", (req, res) => {
-      // handle add to cart
-    });
+    // Configure CORS to accept multiple origins
+    const allowedOrigins = config.server.corsOrigin
+      ? config.server.corsOrigin.split(",").map((origin) => origin.trim())
+      : ["http://localhost:5173", "http://localhost:5174"];
 
     app.use(
       cors({
-        origin: config.server.corsOrigin,
+        origin: (origin, callback) => {
+          // Allow requests with no origin (like mobile apps or curl requests)
+          if (!origin) return callback(null, true);
+          
+          if (allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+          } else {
+            console.warn(`CORS blocked origin: ${origin}`);
+            callback(new Error("Not allowed by CORS"));
+          }
+        },
         credentials: true,
         methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
         allowedHeaders: ["Content-Type", "Authorization"],
@@ -130,8 +135,8 @@ async function startServer() {
     app.use("/api/markets", marketRoutes);
     app.use("/api", productRoutes);
     app.use("/api", orderRoutes);
-
     app.use("/api", cartRoutes);
+    app.use("/api/payments", paymentRoutes);
 
     // Error handling middleware (must be last)
     app.use(notFoundHandler);
