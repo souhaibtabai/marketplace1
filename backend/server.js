@@ -73,7 +73,10 @@ async function startServer() {
     app.use("/api/auth", authLimiter);
     app.use(
       cors({
-        origin: "http://localhost:5173", // your frontend dev server
+        origin: [
+          "https://marketplace-site-a8bm.onrender.com",
+          "https://marketplace-dashboard-tfqs.onrender.com",
+        ], // your frontend dev server
         credentials: true, // if you send cookies or auth headers
       }),
     );
