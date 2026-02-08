@@ -23,7 +23,7 @@ export default defineConfig({
     port: 5173,
     proxy: {
       "/api": {
-        target: "http://localhost:5000", // Your backend server
+        target: "https://marketplacetun.onrender.com", // Your backend server
         changeOrigin: true,
         secure: false,
         configure: (proxy, _options) => {
@@ -37,7 +37,7 @@ export default defineConfig({
             console.log(
               "Received Response from the Target:",
               proxyRes.statusCode,
-              req.url
+              req.url,
             );
           });
         },

@@ -149,14 +149,14 @@ async function startServer() {
     }
 
     // Start server
-    const server = app.listen(config.server.port, () => {
+    const server = app.listen(config.server.port, "0.0.0.0", () => {
       console.log(`
 🚀 Server running successfully!
 📡 Port: ${config.server.port}
 🌍 Environment: ${config.server.env}
 📊 Health Check: http://localhost:${config.server.port}/api/health
 💾 DB Health: http://localhost:${config.server.port}/api/db-health
-      `);
+  `);
 
       // ✅ Show rate limiting info in development
       if (config.server.env === "development") {
