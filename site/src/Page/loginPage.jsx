@@ -110,7 +110,7 @@ const LoginPage = () => {
 
         // Pass token and user via URL parameters (will be removed by dashboard)
         const dashboardUrl = new URL(
-          "https://marketplace-dashboard-tfqs.onrender.comdashboard",
+          "https://marketplace-dashboard-tfqs.onrender.com/dashboard",
         );
         dashboardUrl.searchParams.set("token", token);
         dashboardUrl.searchParams.set("user", encodeURIComponent(user));
