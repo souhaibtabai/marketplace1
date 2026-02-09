@@ -1,12 +1,66 @@
-# React + Vite
+# Marketplace Site Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the customer-facing React application for the marketplace, built with Vite.
 
-Currently, two official plugins are available:
+## Environment Variables
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+**IMPORTANT**: You must set the following environment variables for the application to work correctly:
 
-## Expanding the ESLint configuration
+### Required Environment Variables
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Create a `.env` file in this directory (or set in Render deployment settings):
+
+```env
+VITE_API_URL=https://marketplacetun.onrender.com
+VITE_DASHBOARD_URL=https://marketplace-dashboard-tfqs.onrender.com
+```
+
+### Local Development
+
+For local development:
+```env
+VITE_API_URL=http://localhost:5000
+VITE_DASHBOARD_URL=http://localhost:5174/dashboard
+```
+
+## Deployment on Render
+
+### ⚠️ CRITICAL: Setting Environment Variables in Render
+
+When deploying to Render, you **MUST** set these environment variables in the Render dashboard:
+
+1. Go to your Render dashboard
+2. Select the **marketplace-site** static site
+3. Go to **Environment** tab
+4. Add the following environment variables:
+   - `VITE_API_URL` = `https://marketplacetun.onrender.com`
+   - `VITE_DASHBOARD_URL` = `https://marketplace-dashboard-tfqs.onrender.com`
+
+5. Click **Save Changes**
+6. Render will automatically redeploy with the new environment variables
+
+### Common Issue: Wrong Dashboard URL
+
+**Problem**: When you log in as admin/vendor/livreur, you get redirected to a non-existent URL like `https://marketplace-dashboard.onrender.com/`
+
+**Solution**: This happens when `VITE_DASHBOARD_URL` is not set correctly in Render. Follow the steps above to set it to the correct URL: `https://marketplace-dashboard-tfqs.onrender.com`
+
+## Development
+
+```bash
+npm install
+npm run dev
+```
+
+## Build
+
+```bash
+npm run build
+```
+
+## Tech Stack
+
+- React + Vite
+- TailwindCSS
+- React Router
+- Axios for API calls

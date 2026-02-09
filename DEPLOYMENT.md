@@ -87,11 +87,16 @@ This guide will help you deploy the marketplace application on Render with three
    - **Build Command**: `npm install && npm run build`
    - **Publish Directory**: `dist`
 
-5. Add Environment Variables:
+5. **⚠️ CRITICAL: Add Environment Variables** (MUST be set before first deployment):
    ```
    VITE_API_URL=https://marketplacetun.onrender.com
    VITE_DASHBOARD_URL=https://marketplace-dashboard-tfqs.onrender.com
    ```
+   
+   **IMPORTANT**: 
+   - These variables are required for the site to work correctly
+   - If `VITE_DASHBOARD_URL` is not set, admin/vendor/livreur users will be redirected to the wrong URL
+   - The correct dashboard URL is: `https://marketplace-dashboard-tfqs.onrender.com` (NOT `https://marketplace-dashboard.onrender.com`)
 
 6. Click "Create Static Site"
 
@@ -143,6 +148,21 @@ If you need to run database migrations or seed data:
    ```
 
 ## Troubleshooting
+
+### Wrong Dashboard URL (Admin Redirect to 404 Page)
+
+**Problem**: When logging in as admin/vendor/livreur, you get redirected to `https://marketplace-dashboard.onrender.com/` (404 error) instead of the correct dashboard.
+
+**Solution**: The `VITE_DASHBOARD_URL` environment variable is not set correctly in the Site service.
+
+1. Go to Render Dashboard
+2. Select the **marketplace-site** service
+3. Go to **Environment** tab
+4. Verify `VITE_DASHBOARD_URL` is set to: `https://marketplace-dashboard-tfqs.onrender.com`
+5. If missing or wrong, add/update it and save
+6. Wait for automatic redeployment to complete
+
+**See also**: [RENDER_DEPLOYMENT_FIX.md](./RENDER_DEPLOYMENT_FIX.md) for detailed instructions.
 
 ### CORS Errors
 - Verify CORS_ORIGIN in backend includes both frontend URLs
