@@ -3,6 +3,9 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../components/context/AuthContext";
 
 const LoginPage = () => {
+  console.log("🏁 [LoginPage] Component rendering/re-rendering");
+  console.log("🔍 [LoginPage] Current URL on render:", window.location.href);
+  
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -16,31 +19,58 @@ const LoginPage = () => {
 
   // ✅ Clear localStorage if coming from logout
   useEffect(() => {
+    console.log("🔍 [LoginPage] useEffect triggered - checking URL parameters");
+    console.log("🔍 [LoginPage] Current URL:", window.location.href);
+    console.log("🔍 [LoginPage] Search params:", window.location.search);
+    
     const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get("logout") === "true") {
+    const logoutParam = urlParams.get("logout");
+    
+    console.log("🔍 [LoginPage] logout parameter value:", logoutParam);
+    
+    if (logoutParam === "true") {
       console.log(
-        "🚪 Logout detected - clearing site localStorage and auth state"
+        "🚪 [LoginPage] Logout detected - clearing site localStorage and auth state"
       );
+      console.log("🔍 [LoginPage] Current localStorage token:", localStorage.getItem("token"));
+      console.log("🔍 [LoginPage] Current localStorage user:", localStorage.getItem("user"));
 
       // Call the logout function to clear state
       logout();
 
+      console.log("✅ [LoginPage] Logout function called");
+      console.log("🔍 [LoginPage] After logout - token:", localStorage.getItem("token"));
+      console.log("🔍 [LoginPage] After logout - user:", localStorage.getItem("user"));
+
       // Clean the URL
+      console.log("🔍 [LoginPage] Cleaning URL - removing ?logout=true parameter");
       window.history.replaceState({}, document.title, "/login");
+      console.log("✅ [LoginPage] URL cleaned to:", window.location.href);
+    } else {
+      console.log("ℹ️ [LoginPage] No logout parameter detected, skipping logout cleanup");
     }
   }, [logout]);
 
   // Redirect if already authenticated
   useEffect(() => {
+    console.log("🔍 [LoginPage] Auth redirect useEffect triggered");
+    console.log("🔍 [LoginPage] isAuthenticated:", isAuthenticated);
+    console.log("🔍 [LoginPage] user:", user);
+    console.log("🔍 [LoginPage] localStorage token:", localStorage.getItem("token"));
+    
     // Add a small delay to ensure logout has completed
     const timeoutId = setTimeout(() => {
       const hasToken = localStorage.getItem("token");
+      
+      console.log("🔍 [LoginPage] After timeout - hasToken:", hasToken);
+      console.log("🔍 [LoginPage] After timeout - isAuthenticated:", isAuthenticated);
 
       if (isAuthenticated && user && hasToken) {
         const userRole = user.role?.toLowerCase();
-        console.log("🔄 Already authenticated as:", userRole);
+        console.log("🔄 [LoginPage] Already authenticated as:", userRole);
 
         if (["admin", "vendor", "livreur"].includes(userRole)) {
+          console.log("📍 [LoginPage] User is admin/vendor/livreur - redirecting to dashboard");
           const token = localStorage.getItem("token");
           const userData = localStorage.getItem("user");
           const dashboardUrl = new URL(
@@ -48,10 +78,14 @@ const LoginPage = () => {
           );
           dashboardUrl.searchParams.set("token", token);
           dashboardUrl.searchParams.set("user", encodeURIComponent(userData));
+          console.log("🔍 [LoginPage] Dashboard URL:", dashboardUrl.toString());
           window.location.href = dashboardUrl.toString();
         } else if (userRole === "client") {
+          console.log("📍 [LoginPage] User is client - navigating to /home");
           navigate("/home", { replace: true });
         }
+      } else {
+        console.log("ℹ️ [LoginPage] User not authenticated or missing data, staying on login page");
       }
     }, 100); // Small delay to let logout complete
 
@@ -72,6 +106,9 @@ const LoginPage = () => {
     setLoading(true);
     setError("");
 
+    console.log("🔐 [LoginPage] handleLogin triggered");
+    console.log("🔍 [LoginPage] Form data - email:", formData.email);
+
     try {
       if (!formData.email || !formData.password) {
         throw new Error("Veuillez remplir tous les champs");
@@ -81,20 +118,23 @@ const LoginPage = () => {
         throw new Error("Veuillez entrer une adresse email valide");
       }
 
-      console.log("Attempting login with:", { email: formData.email });
+      console.log("✅ [LoginPage] Form validation passed");
+      console.log("📡 [LoginPage] Attempting login with:", { email: formData.email });
 
       const result = await login({
         email: formData.email,
         password: formData.password,
       });
 
-      console.log("Login result:", result);
+      console.log("📥 [LoginPage] Login result received:", result);
 
       if (!result.success) {
         throw new Error(result.message || "Échec de la connexion");
       }
 
       const userRole = result.user?.role?.toLowerCase();
+      
+      console.log("👤 [LoginPage] User role:", userRole);
 
       if (!userRole) {
         throw new Error("Informations utilisateur incomplètes");
@@ -102,11 +142,14 @@ const LoginPage = () => {
 
       // ✅ FIX: Role-based redirection with token passing
       if (["admin", "vendor", "livreur"].includes(userRole)) {
-        console.log("✅ Redirecting to dashboard app with token...");
+        console.log("✅ [LoginPage] Redirecting to dashboard app with token...");
 
         // Get token from localStorage (site)
         const token = localStorage.getItem("token");
         const user = localStorage.getItem("user");
+
+        console.log("🔍 [LoginPage] Token from localStorage:", token ? "exists" : "missing");
+        console.log("🔍 [LoginPage] User data from localStorage:", user ? "exists" : "missing");
 
         // Pass token and user via URL parameters (will be removed by dashboard)
         const dashboardUrl = new URL(
@@ -115,20 +158,24 @@ const LoginPage = () => {
         dashboardUrl.searchParams.set("token", token);
         dashboardUrl.searchParams.set("user", encodeURIComponent(user));
 
-        console.log("🔗 Redirecting to:", dashboardUrl.toString());
+        console.log("🔗 [LoginPage] Redirecting to:", dashboardUrl.toString());
         window.location.href = dashboardUrl.toString();
       } else if (userRole === "client") {
+        console.log("✅ [LoginPage] Client role - navigating to home");
         // Client stays on site - use navigate() for same-app navigation
         const from = location.state?.from?.pathname || "/home";
+        console.log("🔍 [LoginPage] Navigate to:", from);
         navigate(from, { replace: true });
       } else {
         throw new Error("Rôle utilisateur non reconnu");
       }
     } catch (error) {
-      console.error("Login error:", error);
+      console.error("❌ [LoginPage] Login error:", error);
+      console.error("🔍 [LoginPage] Error message:", error.message);
       setError(error.message);
     } finally {
       setLoading(false);
+      console.log("🏁 [LoginPage] Login process completed");
     }
   };
 
