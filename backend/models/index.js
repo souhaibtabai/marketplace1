@@ -60,20 +60,6 @@ if (db.Categorie) db.Category = db.Categorie;
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
-// Test connection
-const testConnection = async () => {
-  try {
-    await sequelize.authenticate();
-    console.log("✅ Database connection has been established successfully.");
-  } catch (error) {
-    console.error("❌ Unable to connect to the database:", error);
-  }
-};
-
-// Sync models
-sequelize.sync();
-
 module.exports = {
   ...db,
-  testConnection,
 };
