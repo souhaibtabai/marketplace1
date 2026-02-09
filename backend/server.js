@@ -44,15 +44,7 @@ const authLimiter = rateLimit({
   },
   skipSuccessfulRequests: true,
 });
-db.sequelize
-  .sync({ alter: true }) // Use { force: true } to drop and recreate tables, { alter: true } to update tables
-  .then(() => {
-    console.log("✅ Database synced!");
-    // Start your server here
-  })
-  .catch((err) => {
-    console.error("❌ Database sync error:", err);
-  });
+
 async function startServer() {
   try {
     const app = express();
@@ -142,8 +134,13 @@ async function startServer() {
     app.use(notFoundHandler);
     app.use(jsonErrorHandler);
 
-    // Test database connection
-    await testConnection();
+    // Test database connection with retry logic
+    const dbConnected = await testConnection();
+    
+    if (!dbConnected) {
+      console.error("❌ Failed to establish database connection. Server will not start.");
+      process.exit(1);
+    }
 
     // Sync database in development
     if (config.server.env === "development") {
