@@ -8,9 +8,13 @@ import { writeFileSync, readFileSync } from "fs";
 const spaFallbackPlugin = () => ({
   name: "spa-fallback",
   closeBundle() {
-    const distDir = resolve("dist");
-    const indexContent = readFileSync(resolve(distDir, "index.html"), "utf-8");
-    writeFileSync(resolve(distDir, "200.html"), indexContent);
+    try {
+      const distDir = resolve("dist");
+      const indexContent = readFileSync(resolve(distDir, "index.html"), "utf-8");
+      writeFileSync(resolve(distDir, "200.html"), indexContent);
+    } catch (err) {
+      console.warn("SPA fallback plugin: Could not create 200.html -", err.message);
+    }
   },
 });
 
