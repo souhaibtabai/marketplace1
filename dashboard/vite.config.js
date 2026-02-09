@@ -1,9 +1,21 @@
 import { defineConfig } from "vite";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
+import { resolve } from "path";
+import { writeFileSync, readFileSync } from "fs";
+
+// Plugin to copy index.html as 200.html for SPA fallback on static hosting (Render, Surge, etc.)
+const spaFallbackPlugin = () => ({
+  name: "spa-fallback",
+  closeBundle() {
+    const distDir = resolve("dist");
+    const indexContent = readFileSync(resolve(distDir, "index.html"), "utf-8");
+    writeFileSync(resolve(distDir, "200.html"), indexContent);
+  },
+});
 
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [react(), tailwindcss(), spaFallbackPlugin()],
   optimizeDeps: {
     exclude: ["lucide-react"],
   },
