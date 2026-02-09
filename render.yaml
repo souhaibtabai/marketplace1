@@ -1,0 +1,43 @@
+services:
+  # Backend API Service
+  - type: web
+    name: marketplacetun
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+
+  # Site Frontend (Static Site)
+  - type: web
+    name: marketplace-site
+    runtime: static
+    rootDir: site
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: SAMEORIGIN
+
+  # Dashboard Frontend (Static Site)
+  - type: web
+    name: marketplace-dashboard
+    runtime: static
+    rootDir: dashboard
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: SAMEORIGIN
