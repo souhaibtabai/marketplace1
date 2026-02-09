@@ -11,6 +11,8 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }) => {
+  console.log("🚀 [AuthContext] AuthProvider component initializing");
+  
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -22,22 +24,33 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const initializeAuth = () => {
+    console.log("🔧 [AuthContext] initializeAuth called");
     try {
       const storedToken = localStorage.getItem("token");
       const storedUser = localStorage.getItem("user");
 
+      console.log("🔍 [AuthContext] storedToken exists:", !!storedToken);
+      console.log("🔍 [AuthContext] storedUser exists:", !!storedUser);
+
       if (storedToken && storedUser) {
+        console.log("✅ [AuthContext] Found stored credentials, parsing user data");
         const userData = JSON.parse(storedUser);
+        console.log("👤 [AuthContext] Parsed user data:", userData);
         setToken(storedToken);
         setUser(userData);
+        console.log("✅ [AuthContext] Auth state initialized with stored credentials");
+      } else {
+        console.log("ℹ️ [AuthContext] No stored credentials found");
       }
     } catch (error) {
-      console.error("Error initializing auth:", error);
+      console.error("❌ [AuthContext] Error initializing auth:", error);
       // Clear corrupted data
       localStorage.removeItem("token");
       localStorage.removeItem("user");
+      console.log("🧹 [AuthContext] Cleared corrupted localStorage data");
     } finally {
       setLoading(false);
+      console.log("✅ [AuthContext] Auth initialization complete, loading set to false");
     }
   };
 
@@ -209,13 +222,24 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    console.log("🚪 Logging out user");
+    console.log("🚪 [AuthContext] logout function called");
+    console.log("🔍 [AuthContext] Current user:", user);
+    console.log("🔍 [AuthContext] Current token:", token);
+    console.log("🔍 [AuthContext] localStorage token before clear:", localStorage.getItem("token"));
+    console.log("🔍 [AuthContext] localStorage user before clear:", localStorage.getItem("user"));
+    
     setUser(null);
     setToken(null);
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    
+    console.log("✅ [AuthContext] State cleared - user and token set to null");
+    console.log("✅ [AuthContext] localStorage cleared");
+    console.log("🔍 [AuthContext] localStorage token after clear:", localStorage.getItem("token"));
+    console.log("🔍 [AuthContext] localStorage user after clear:", localStorage.getItem("user"));
 
     // Notify other tabs/windows
+    console.log("📡 [AuthContext] Dispatching storage event for cross-tab sync");
     window.dispatchEvent(
       new StorageEvent("storage", {
         key: "token",
@@ -224,7 +248,9 @@ export const AuthProvider = ({ children }) => {
     );
 
     // Dispatch custom event for same-tab updates
+    console.log("📡 [AuthContext] Dispatching auth-update event");
     window.dispatchEvent(new CustomEvent("auth-update"));
+    console.log("✅ [AuthContext] Logout completed");
   };
 
   // Debug function to test backend connectivity

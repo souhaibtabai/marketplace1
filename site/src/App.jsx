@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
+  useLocation,
 } from "react-router-dom";
 import { AuthProvider } from "./components/context/AuthContext.jsx";
 import { CartProvider } from "./components/context/CartContext.jsx";
@@ -34,11 +35,26 @@ const LayoutWrapper = ({ children }) => (
   </PrivateRoute>
 );
 
+// Component to log route changes
+const RouteLogger = () => {
+  const location = useLocation();
+  
+  useEffect(() => {
+    console.log("🗺️ [App] Route changed");
+    console.log("🔍 [App] Current pathname:", location.pathname);
+    console.log("🔍 [App] Current search:", location.search);
+    console.log("🔍 [App] Full location:", location);
+  }, [location]);
+  
+  return null;
+};
+
 const App = () => {
   return (
     <AuthProvider>
       <CartProvider>
         <Router>
+          <RouteLogger />
           <div className="flex flex-col min-h-screen">
             <Routes>
               {/* Public routes */}
