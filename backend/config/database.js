@@ -97,7 +97,7 @@ const testConnection = async (maxRetries = 5, retryDelay = 2000) => {
       lastError = error;
       
       if (attempt < maxRetries) {
-        const waitTime = retryDelay * attempt; // Exponential backoff
+        const waitTime = retryDelay * attempt; // Linear backoff
         console.log(
           `⚠️  Database connection attempt ${attempt}/${maxRetries} failed. Retrying in ${waitTime}ms...`
         );
@@ -106,7 +106,7 @@ const testConnection = async (maxRetries = 5, retryDelay = 2000) => {
     }
   }
   
-  console.error("❌ Unable to connect to database after", maxRetries, "attempts:", lastError);
+  console.error(`❌ Unable to connect to database after ${maxRetries} attempts:`, lastError);
   return false;
 };
 
