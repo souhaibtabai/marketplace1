@@ -1,12 +1,12 @@
 module.exports = {
   ORDER_STATUS: {
-    PENDING: "pending",
-    IN_PROGRESS: "en_cours",
+    PENDING: "PENDING",
+    IN_PROGRESS: "IN_PROGRESS",
     CONFIRMED: "CONFIRMED",
     SHIPPED: "SHIPPED",
-    DELIVERED: "delivered",
-    CANCELLED: "canceled",
-    RETURNED: "returned",
+    DELIVERED: "DELIVERED",
+    CANCELLED: "CANCELLED",
+    RETURNED: "RETURNED",
   },
   USER_ROLES: {
     admin: "admin",
