@@ -26,7 +26,8 @@ const PrivateRoute = ({ children, allowedRoles = [] }) => {
 
     // Site-specific logic - redirect non-clients to dashboard
     if (["admin", "vendor", "livreur"].includes(userRole)) {
-      window.location.href = "http://localhost:5174/dashboard";
+      window.location.href =
+        import.meta.env.VITE_DASHBOARD_URL || "http://localhost:5174/dashboard";
       return null;
     }
 

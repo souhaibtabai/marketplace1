@@ -1,15 +1,29 @@
 module.exports = {
   ORDER_STATUS: {
-    PENDING: "pending",
-    IN_PROGRESS: "en_cours",
-    DELIVERED: "delivered",
-    CANCELLED: "canceled",
-    RETURNED: "returned",
+    PENDING: "PENDING",
+    IN_PROGRESS: "IN_PROGRESS",
+    CONFIRMED: "CONFIRMED",
+    SHIPPED: "SHIPPED",
+    DELIVERED: "DELIVERED",
+    CANCELLED: "CANCELLED",
+    RETURNED: "RETURNED",
   },
   USER_ROLES: {
     admin: "admin",
     CLIENT: "client",
     VENDOR: "vendor",
     LIVREUR: "livreur",
+  },
+  PAYMENT_STATUS: {
+    PENDING: "PENDING",
+    COMPLETED: "COMPLETED",
+    FAILED: "FAILED",
+    REFUNDED: "REFUNDED",
+  },
+  PAYMENT_METHOD: {
+    CASH: "CASH",
+    CARD: "CARD",
+    BANK_TRANSFER: "BANK_TRANSFER",
+    MOBILE_PAYMENT: "MOBILE_PAYMENT",
   },
 };

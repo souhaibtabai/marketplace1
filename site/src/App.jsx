@@ -17,6 +17,9 @@ import BusinessAccountRequest from "./Page/BusinessAccount.jsx";
 import ShopPage from "./Page/ShopPage.jsx";
 import ShopDetailPage from "./Page/ShopDetailPage.jsx";
 import CartPage from "./Page/CartPage";
+import CheckoutPage from "./Page/CheckoutPage";
+import OrderConfirmationPage from "./Page/OrderConfirmationPage";
+import OrdersPage from "./Page/OrdersPage";
 import PrivateRoute from "./components/PrivateRoute.jsx";
 import "./App.css";
 
@@ -92,6 +95,30 @@ const App = () => {
                 element={
                   <LayoutWrapper>
                     <CartPage />
+                  </LayoutWrapper>
+                }
+              />
+              <Route
+                path="/checkout"
+                element={
+                  <LayoutWrapper>
+                    <CheckoutPage />
+                  </LayoutWrapper>
+                }
+              />
+              <Route
+                path="/order-confirmation"
+                element={
+                  <LayoutWrapper>
+                    <OrderConfirmationPage />
+                  </LayoutWrapper>
+                }
+              />
+              <Route
+                path="/orders"
+                element={
+                  <LayoutWrapper>
+                    <OrdersPage />
                   </LayoutWrapper>
                 }
               />

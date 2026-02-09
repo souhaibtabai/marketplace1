@@ -23,6 +23,7 @@ const modelFiles = [
   "Order.js",
   "cart.js",
   "business.js",
+  "Payment.js",
 ];
 
 // Load models

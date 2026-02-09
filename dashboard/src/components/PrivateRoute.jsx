@@ -39,7 +39,9 @@ const PrivateRoute = ({ children, allowedRoles = [] }) => {
     console.log("📦 localStorage user:", localStorage.getItem("user"));
 
     // Add logout=true to ensure site clears its localStorage
-    window.location.href = "http://localhost:5173/login?logout=true";
+    window.location.href =
+      (import.meta.env.VITE_SITE_URL || "http://localhost:5173") +
+      "/login?logout=true";
     return null;
   }
 
@@ -58,7 +60,8 @@ const PrivateRoute = ({ children, allowedRoles = [] }) => {
       console.log(
         "⚠️ PrivateRoute: Client trying to access dashboard - redirecting to home"
       );
-      window.location.href = "http://localhost:5173/home";
+      window.location.href =
+        (import.meta.env.VITE_SITE_URL || "http://localhost:5173") + "/home";
       return null;
     }
 
@@ -67,7 +70,8 @@ const PrivateRoute = ({ children, allowedRoles = [] }) => {
       console.log(
         "⚠️ PrivateRoute: User role not in allowed roles - redirecting to login"
       );
-      window.location.href = "http://localhost:5173/login";
+      window.location.href =
+        (import.meta.env.VITE_SITE_URL || "http://localhost:5173") + "/login";
       return null;
     }
   }

@@ -169,7 +169,10 @@ export const AuthProvider = ({ children }) => {
     console.log("🔄 Redirecting to login page with logout flag...");
 
     // Redirect with logout flag so site knows to clear its localStorage
-    window.location.replace("http://localhost:5173/login?logout=true");
+    window.location.replace(
+      (import.meta.env.VITE_SITE_URL || "http://localhost:5173") +
+        "/login?logout=true"
+    );
   };
 
   const value = {
