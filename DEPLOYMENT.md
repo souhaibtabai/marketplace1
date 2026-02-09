@@ -46,6 +46,18 @@ This guide will help you deploy the marketplace application on Render with three
    - **Start Command**: `npm start`
 
 5. Add Environment Variables:
+   
+   **Option 1: Using DATABASE_URL (Recommended)**
+   ```
+   NODE_ENV=production
+   PORT=5000
+   CORS_ORIGIN=https://marketplace-site-a8bm.onrender.com,https://marketplace-dashboard-tfqs.onrender.com
+   DATABASE_URL=<your-render-database-internal-url>
+   JWT_SECRET=<generate-a-secure-random-string>
+   JWT_EXPIRES_IN=24h
+   ```
+   
+   **Option 2: Using Individual Database Parameters**
    ```
    NODE_ENV=production
    PORT=5000
@@ -58,6 +70,8 @@ This guide will help you deploy the marketplace application on Render with three
    JWT_SECRET=<generate-a-secure-random-string>
    JWT_EXPIRES_IN=24h
    ```
+   
+   > **Note**: The application will automatically retry database connections up to 5 times with exponential backoff if the initial connection fails. This helps with production deployments where the database might not be immediately available.
 
 6. Click "Create Web Service"
 
