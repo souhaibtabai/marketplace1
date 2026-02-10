@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Package, Clock, CheckCircle, XCircle, TruckIcon } from "lucide-react";
+import { API_BASE_URL } from "../components/service/api";
 
 const OrdersPage = () => {
   const [orders, setOrders] = useState([]);
@@ -19,7 +20,7 @@ const OrdersPage = () => {
         throw new Error("Vous devez être connecté");
       }
 
-      const response = await fetch("/api/myorder", {
+      const response = await fetch(`${API_BASE_URL}/api/myorder`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

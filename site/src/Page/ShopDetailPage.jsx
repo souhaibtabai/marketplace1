@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useCart } from "../components/context/CartContext";
+import { API_BASE_URL } from "../components/service/api";
 
 const ShopDetailPage = () => {
   const { id } = useParams();
@@ -32,7 +33,7 @@ const ShopDetailPage = () => {
       setLoading(true);
 
       // Fetch shop details
-      const shopResponse = await fetch(`/api/markets/${id}`, {
+      const shopResponse = await fetch(`${API_BASE_URL}/api/markets/${id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -44,7 +45,7 @@ const ShopDetailPage = () => {
       setShop(shopData);
 
       // Fetch shop products
-      const productsResponse = await fetch(`/api/markets/${id}/products`);
+      const productsResponse = await fetch(`${API_BASE_URL}/api/markets/${id}/products`);
       if (!productsResponse.ok) throw new Error("Failed to fetch products");
       const productsData = await productsResponse.json();
       const productsArray = Array.isArray(productsData)

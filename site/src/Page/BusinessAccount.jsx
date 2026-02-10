@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
+import { API_BASE_URL } from "../components/service/api";
 const BusinessAccountRequest = ({ setCurrentPage }) => {
   const [formData, setFormData] = useState({
     email: "",
@@ -44,7 +45,7 @@ const BusinessAccountRequest = ({ setCurrentPage }) => {
         throw new Error("Veuillez entrer une adresse email valide");
       }
 
-      const response = await fetch("/api/business-account-request", {
+      const response = await fetch(`${API_BASE_URL}/api/business-account-request`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
