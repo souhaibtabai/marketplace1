@@ -32,7 +32,7 @@ const ShopDetailPage = () => {
       setLoading(true);
 
       // Fetch shop details
-      const shopResponse = await fetch(`/api/markets/${id}`, {
+      const shopResponse = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/markets/${id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -44,7 +44,7 @@ const ShopDetailPage = () => {
       setShop(shopData);
 
       // Fetch shop products
-      const productsResponse = await fetch(`/api/markets/${id}/products`);
+      const productsResponse = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/markets/${id}/products`);
       if (!productsResponse.ok) throw new Error("Failed to fetch products");
       const productsData = await productsResponse.json();
       const productsArray = Array.isArray(productsData)

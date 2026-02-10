@@ -35,7 +35,7 @@ const CheckoutPage = () => {
       }));
 
       // Step 1: Create the order
-      const orderResponse = await fetch("/api/", {
+      const orderResponse = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -55,7 +55,7 @@ const CheckoutPage = () => {
       }
 
       // Step 2: Create the payment
-      const paymentResponse = await fetch("/api/payments", {
+      const paymentResponse = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/payments`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

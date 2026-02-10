@@ -1,5 +1,7 @@
 import React, { useState, useEffect, createContext, useContext } from "react";
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || "";
+
 const AuthContext = createContext();
 
 export const useAuth = () => {
@@ -97,7 +99,7 @@ export const AuthProvider = ({ children }) => {
         hasPassword: !!credentials.password,
       });
 
-      const response = await fetch("/api/login", {
+      const response = await fetch(`${API_BASE_URL}/api/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -111,6 +113,12 @@ export const AuthProvider = ({ children }) => {
         "📡 Login response headers:",
         Object.fromEntries(response.headers.entries())
       );
+
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        console.error("❌ Response is not JSON. Content-Type:", contentType);
+        return { success: false, message: "Erreur de connexion au serveur" };
+      }
 
       const data = await response.json();
       console.log("📄 Login response data:", data);
@@ -179,7 +187,7 @@ export const AuthProvider = ({ children }) => {
     try {
       console.log("📝 Registration attempt");
 
-      const response = await fetch("/api/register", {
+      const response = await fetch(`${API_BASE_URL}/api/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -257,7 +265,7 @@ export const AuthProvider = ({ children }) => {
   const testBackendConnection = async () => {
     try {
       console.log("🔍 Testing backend connection...");
-      const response = await fetch("/api/test", {
+      const response = await fetch(`${API_BASE_URL}/api/test`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

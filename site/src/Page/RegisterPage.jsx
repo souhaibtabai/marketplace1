@@ -54,7 +54,8 @@ const RegisterPage = () => {
         throw new Error("Le mot de passe doit contenir au moins 6 caractères");
       }
 
-      const response = await fetch("/api/register", {
+      const API_BASE_URL = import.meta.env.VITE_API_URL || "";
+      const response = await fetch(`${API_BASE_URL}/api/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -1,6 +1,6 @@
 // API Service
 export const api = {
-  baseURL: "/api",
+  baseURL: `${import.meta.env.VITE_API_URL || ""}/api`,
 
   // Helper method for consistent headers
   getHeaders() {

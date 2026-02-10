@@ -19,7 +19,7 @@ const OrdersPage = () => {
         throw new Error("Vous devez être connecté");
       }
 
-      const response = await fetch("/api/myorder", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/myorder`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

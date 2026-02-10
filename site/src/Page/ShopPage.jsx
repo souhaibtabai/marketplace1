@@ -15,7 +15,7 @@ const ShopsPage = () => {
   const fetchShops = async () => {
     try {
       setLoading(true);
-      const response = await fetch("/api/markets/");
+      const response = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/markets/`);
       if (!response.ok) {
         throw new Error("Failed to fetch shops");
       }

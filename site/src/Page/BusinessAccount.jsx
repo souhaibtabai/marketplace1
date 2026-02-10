@@ -44,7 +44,8 @@ const BusinessAccountRequest = ({ setCurrentPage }) => {
         throw new Error("Veuillez entrer une adresse email valide");
       }
 
-      const response = await fetch("/api/business-account-request", {
+      const API_BASE_URL = import.meta.env.VITE_API_URL || "";
+      const response = await fetch(`${API_BASE_URL}/api/business-account-request`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
