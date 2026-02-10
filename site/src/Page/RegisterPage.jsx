@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../components/context/AuthContext.jsx";
+import { API_BASE_URL } from "../components/service/api";
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -54,7 +55,6 @@ const RegisterPage = () => {
         throw new Error("Le mot de passe doit contenir au moins 6 caractères");
       }
 
-      const API_BASE_URL = import.meta.env.VITE_API_URL || "";
       const response = await fetch(`${API_BASE_URL}/api/register`, {
         method: "POST",
         headers: {

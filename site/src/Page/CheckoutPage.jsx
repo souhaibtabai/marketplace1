@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { CartContext } from "../components/context/CartContext.jsx";
+import { API_BASE_URL } from "../components/service/api";
 
 const CheckoutPage = () => {
   const { cart, clearCart } = useContext(CartContext);
@@ -35,7 +36,7 @@ const CheckoutPage = () => {
       }));
 
       // Step 1: Create the order
-      const orderResponse = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/`, {
+      const orderResponse = await fetch(`${API_BASE_URL}/api/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -55,7 +56,7 @@ const CheckoutPage = () => {
       }
 
       // Step 2: Create the payment
-      const paymentResponse = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/payments`, {
+      const paymentResponse = await fetch(`${API_BASE_URL}/api/payments`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
