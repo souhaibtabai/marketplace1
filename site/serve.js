@@ -14,9 +14,17 @@ app.use(express.static(DIST_DIR));
 
 // SPA fallback: serve index.html for all non-file routes
 app.get("*", (req, res) => {
-  res.sendFile(path.join(DIST_DIR, "index.html"));
+  res.sendFile(path.join(DIST_DIR, "index.html"), (err) => {
+    if (err) {
+      console.error("Failed to serve index.html:", err.message);
+      res.status(500).send("Server error: unable to load application");
+    }
+  });
 });
 
 app.listen(PORT, () => {
   console.log(`Site server running on port ${PORT}`);
+}).on("error", (err) => {
+  console.error("Failed to start server:", err.message);
+  process.exit(1);
 });
