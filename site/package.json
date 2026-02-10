@@ -6,11 +6,13 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "start": "node serve.js",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.11",
+    "express": "^4.21.2",
     "lucide-react": "^0.541.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",

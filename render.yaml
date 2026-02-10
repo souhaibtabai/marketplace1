@@ -10,21 +10,16 @@ services:
       - key: NODE_ENV
         value: production
 
-  # Site Frontend (Static Site)
+  # Site Frontend (Node.js Web Service with SPA fallback)
   - type: web
     name: marketplace-site
-    runtime: static
+    runtime: node
     rootDir: site
     buildCommand: npm install && npm run build
-    staticPublishPath: dist
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
-    headers:
-      - path: /*
-        name: X-Frame-Options
-        value: SAMEORIGIN
+    startCommand: node serve.js
+    envVars:
+      - key: NODE_ENV
+        value: production
 
   # Dashboard Frontend (Static Site)
   - type: web
