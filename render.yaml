@@ -9,6 +9,8 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
+      - key: CORS_ORIGIN
+        value: https://marketplace-site-a8bm.onrender.com,https://marketplace-dashboard-tfqs.onrender.com
 
   # Site Frontend (Static Site)
   - type: web
