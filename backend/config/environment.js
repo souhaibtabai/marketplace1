@@ -12,7 +12,7 @@ const config = {
   server: {
     port: process.env.PORT || 5000,
     env: process.env.NODE_ENV || "development",
-    corsOrigin: process.env.CORS_ORIGIN || "http://localhost:5173,http://localhost:5174",
+    corsOrigin: process.env.CORS_ORIGIN || "http://localhost:5173,http://localhost:5174,https://marketplace-site-a8bm.onrender.com,https://marketplace-dashboard-tfqs.onrender.com",
   },
   database: {
     host: process.env.DB_HOST || "localhost",
