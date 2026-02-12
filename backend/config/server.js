@@ -4,7 +4,31 @@ const config = require("./environment");
 
 function createServer() {
   const app = express();
-  app.use(cors());
+  
+  const allowedOrigins = config.server.corsOrigin
+    ? config.server.corsOrigin.split(",").map((origin) => origin.trim())
+    : [
+        "http://localhost:5173",
+        "http://localhost:5174",
+        "https://marketplace-site-a8bm.onrender.com",
+        "https://marketplace-dashboard-tfqs.onrender.com",
+      ];
+
+  app.use(
+    cors({
+      origin: (origin, callback) => {
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.includes(origin)) {
+          callback(null, true);
+        } else {
+          callback(new Error("Not allowed by CORS"));
+        }
+      },
+      credentials: true,
+      methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+      allowedHeaders: ["Content-Type", "Authorization"],
+    })
+  );
 
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));

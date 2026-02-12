@@ -65,7 +65,12 @@ async function startServer() {
     // Configure CORS to accept multiple origins
     const allowedOrigins = config.server.corsOrigin
       ? config.server.corsOrigin.split(",").map((origin) => origin.trim())
-      : ["http://localhost:5173", "http://localhost:5174"];
+      : [
+          "http://localhost:5173",
+          "http://localhost:5174",
+          "https://marketplace-site-a8bm.onrender.com",
+          "https://marketplace-dashboard-tfqs.onrender.com",
+        ];
 
     app.use(
       cors({
