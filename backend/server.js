@@ -49,20 +49,7 @@ async function startServer() {
   try {
     const app = express();
 
-    app.use(
-      helmet({
-        contentSecurityPolicy: false,
-        crossOriginEmbedderPolicy: false,
-      })
-    );
-
-    app.use(compression());
-
-    app.use("/api", limiter);
-
-    app.use("/api/auth", authLimiter);
-
-    // Configure CORS to accept multiple origins
+    // Configure CORS to accept multiple origins (must be before other middleware)
     const allowedOrigins = config.server.corsOrigin
       ? config.server.corsOrigin.split(",").map((origin) => origin.trim())
       : [
@@ -86,10 +73,23 @@ async function startServer() {
           }
         },
         credentials: true,
-        methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+        methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
         allowedHeaders: ["Content-Type", "Authorization"],
       })
     );
+
+    app.use(
+      helmet({
+        contentSecurityPolicy: false,
+        crossOriginEmbedderPolicy: false,
+      })
+    );
+
+    app.use(compression());
+
+    app.use("/api", limiter);
+
+    app.use("/api/auth", authLimiter);
 
     // Body parsing middleware
     app.use(express.json({ limit: "10mb" }));
