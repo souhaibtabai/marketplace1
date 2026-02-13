@@ -1,12 +1,21 @@
 const dotenv = require("dotenv");
 const path = require("path");
+const fs = require("fs");
 
-dotenv.config({
-  path: path.resolve(
-    __dirname,
-    `../.env.${process.env.NODE_ENV || "development"}`
-  ),
-});
+// Try to load environment-specific .env file first, then fallback to .env
+const nodeEnv = process.env.NODE_ENV || "development";
+const envPath = path.resolve(__dirname, `../.env.${nodeEnv}`);
+const defaultEnvPath = path.resolve(__dirname, "../.env");
+
+if (fs.existsSync(envPath)) {
+  dotenv.config({ path: envPath });
+  console.log(`✅ Loaded environment from .env.${nodeEnv}`);
+} else if (fs.existsSync(defaultEnvPath)) {
+  dotenv.config({ path: defaultEnvPath });
+  console.log(`✅ Loaded environment from .env (fallback)`);
+} else {
+  console.log(`ℹ️  No .env file found, using process.env variables`);
+}
 
 const config = {
   server: {
