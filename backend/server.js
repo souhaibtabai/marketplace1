@@ -97,20 +97,20 @@ async function startServer() {
       })
     );
 
-    // Debug logging for CORS headers
-    app.use((req, res, next) => {
-      const origin = req.get('origin');
-      if (origin) {
-        console.log(`[CORS] Request from origin: ${origin}, Method: ${req.method}, Path: ${req.path}`);
-        const originalSend = res.send;
-        res.send = function(data) {
-          const corsHeader = res.get('Access-Control-Allow-Origin');
-          console.log(`[CORS] Response ACAO header: ${corsHeader || 'NOT SET'}`);
-          originalSend.call(this, data);
-        };
-      }
-      next();
-    });
+    // Debug logging for CORS headers (only in development or when DEBUG_CORS is enabled)
+    if (config.server.env === 'development' || process.env.DEBUG_CORS === 'true') {
+      app.use((req, res, next) => {
+        const origin = req.get('origin');
+        if (origin) {
+          console.log(`[CORS] Request from origin: ${origin}, Method: ${req.method}, Path: ${req.path}`);
+          res.on('finish', () => {
+            const corsHeader = res.get('Access-Control-Allow-Origin');
+            console.log(`[CORS] Response ACAO header: ${corsHeader || 'NOT SET'}`);
+          });
+        }
+        next();
+      });
+    }
 
     app.use(compression());
 
