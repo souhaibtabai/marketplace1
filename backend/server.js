@@ -31,7 +31,7 @@ const limiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   skip: (req) => {
-    return config.server.env === "development" && req.path.includes("/health");
+    return req.method === 'OPTIONS' || (config.server.env === "development" && req.path.includes("/health"));
   },
 });
 
@@ -43,6 +43,9 @@ const authLimiter = rateLimit({
     message: "Trop de tentatives de connexion. Réessayez dans 15 minutes.",
   },
   skipSuccessfulRequests: true,
+  skip: (req) => {
+    return req.method === 'OPTIONS';
+  },
 });
 
 async function startServer() {
@@ -51,7 +54,7 @@ async function startServer() {
 
     // Configure CORS to accept multiple origins (must be before other middleware)
     const allowedOrigins = config.server.corsOrigin
-      ? config.server.corsOrigin.split(",").map((origin) => origin.trim())
+      ? config.server.corsOrigin.split(",").map((origin) => origin.trim().replace(/\/$/, ''))
       : [
           "http://localhost:5173",
           "http://localhost:5174",
@@ -59,33 +62,55 @@ async function startServer() {
           "https://marketplace-dashboard-tfqs.onrender.com",
         ];
 
-    app.use(
-      cors({
-        origin: (origin, callback) => {
-          // Allow requests with no origin (like mobile apps or curl requests)
-          if (!origin) return callback(null, true);
-          
-          if (allowedOrigins.includes(origin)) {
-            callback(null, true);
-          } else {
-            console.warn(`CORS blocked origin: ${origin}`);
-            const err = new Error("Not allowed by CORS");
-            err.status = 403;
-            callback(err);
-          }
-        },
-        credentials: true,
-        methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-        allowedHeaders: ["Content-Type", "Authorization"],
-      })
-    );
+    const corsOptions = {
+      origin: (origin, callback) => {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+        
+        // Normalize origin (remove trailing slash)
+        const normalizedOrigin = origin.replace(/\/$/, '');
+        
+        if (allowedOrigins.includes(normalizedOrigin)) {
+          callback(null, true);
+        } else {
+          console.warn(`CORS blocked origin: ${origin}`);
+          // Return null instead of error to send proper CORS rejection
+          callback(null, false);
+        }
+      },
+      credentials: true,
+      methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+      allowedHeaders: ["Content-Type", "Authorization"],
+    };
+
+    // Apply CORS middleware
+    app.use(cors(corsOptions));
+
+    // Handle preflight requests explicitly (must be before rate limiters)
+    app.options(/.*/, cors(corsOptions));
 
     app.use(
       helmet({
         contentSecurityPolicy: false,
         crossOriginEmbedderPolicy: false,
+        crossOriginResourcePolicy: false,
       })
     );
+
+    // Debug logging for CORS headers
+    app.use((req, res, next) => {
+      const origin = req.get('origin');
+      if (origin) {
+        console.log(`[CORS] Request from origin: ${origin}, Method: ${req.method}, Path: ${req.path}`);
+        const originalSend = res.send;
+        res.send = function(data) {
+          const corsHeader = res.get('Access-Control-Allow-Origin');
+          console.log(`[CORS] Response ACAO header: ${corsHeader || 'NOT SET'}`);
+          originalSend.call(this, data);
+        };
+      }
+      next();
+    });
 
     app.use(compression());
 
