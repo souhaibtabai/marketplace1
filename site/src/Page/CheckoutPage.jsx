@@ -36,7 +36,7 @@ const CheckoutPage = () => {
       }));
 
       // Step 1: Create the order
-      const orderResponse = await fetch(`${API_BASE_URL}/api/`, {
+      const orderResponse = await fetch(`${API_BASE_URL}/api`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

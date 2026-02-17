@@ -11,6 +11,10 @@ services:
         value: production
       - key: CORS_ORIGIN
         value: https://marketplace-site-a8bm.onrender.com,https://marketplace-dashboard-tfqs.onrender.com
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
 
   # Site Frontend (Static Site)
   - type: web
