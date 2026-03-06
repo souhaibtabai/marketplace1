@@ -237,7 +237,7 @@ const ProfilPage = () => {
 
   useEffect(() => {
     fetchProfile();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (loading && !user) {
     return (

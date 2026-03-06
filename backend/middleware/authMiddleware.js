@@ -18,11 +18,7 @@ const authenticateUser = async (req, res, next) => {
     }
 
     // Verify token
-    const decoded = jwt.verify(
-      token, // Use the secret from the config
-      config.auth.JWTSECRET ||
-        "souhaib5ertyrtyuikjhgfdcdzertyjhgbfvdhy5154fvdwcdsg8619v1v6fdb16"
-    );
+    const decoded = jwt.verify(token, config.auth.JWTSECRET);
 
     // Get user from database using raw SQL for consistency
     const users = await sequelize.query(
@@ -103,7 +99,7 @@ const authorizeRoles = (...roles) => {
 
 // admin only middleware
 const requireadmin = (req, res, next) => {
-  if (!req.user || req.user.role !== "admin") {
+  if (!req.user || req.user.role !== "ADMIN") {
     return res.status(403).json({
       success: false,
       message: "Accès administrateur requis",
@@ -115,7 +111,7 @@ const requireadmin = (req, res, next) => {
 // Vendor ownership check middleware
 const requireVendorOwnership = (entityType) => {
   return async (req, res, next) => {
-    if (req.user.role === "admin") {
+    if (req.user.role === "ADMIN") {
       return next(); // admins can access everything
     }
 

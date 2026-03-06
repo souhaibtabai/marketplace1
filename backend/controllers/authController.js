@@ -91,7 +91,7 @@ class AuthController {
       }
 
       // Validate role
-      const validRoles = ["CLIENT", "VENDOR", "CLIENT", "LIVREUR"];
+      const validRoles = ["CLIENT", "VENDOR", "ADMIN", "LIVREUR"];
       const userRole = role || "CLIENT";
       if (!validRoles.includes(userRole)) {
         await transaction.rollback();
@@ -123,17 +123,16 @@ class AuthController {
       const user = newUsers[0];
       await transaction.commit();
 
-      // Generate token - Fixed config reference
+      // Generate token
       const token = jwt.sign(
         {
           id_utilisateur: user.id_utilisateur,
           email: user.email,
           role: user.role,
         },
-        config.auth?.jwtSecret || config.jwt?.secret || process.env.JWT_SECRET,
+        config.auth.JWTSECRET,
         {
-          expiresIn:
-            config.auth?.jwtExpiresIn || config.jwt?.expiresIn || "24h",
+          expiresIn: config.auth.jwtExpiresIn,
         }
       );
 
@@ -185,17 +184,16 @@ class AuthController {
         return sendError(res, 401, "Identifiants incorrects");
       }
 
-      // Generate token - Fixed config reference
+      // Generate token
       const token = jwt.sign(
         {
           id_utilisateur: user.id_utilisateur,
           email: user.email,
           role: user.role,
         },
-        config.auth?.jwtSecret || config.jwt?.secret || process.env.JWT_SECRET,
+        config.auth.JWTSECRET,
         {
-          expiresIn:
-            config.auth?.jwtExpiresIn || config.jwt?.expiresIn || "24h",
+          expiresIn: config.auth.jwtExpiresIn,
         }
       );
 
@@ -556,17 +554,16 @@ class AuthController {
 
       const user = users[0];
 
-      // Generate new token - Fixed config reference
+      // Generate new token
       const token = jwt.sign(
         {
           id_utilisateur: user.id_utilisateur,
           email: user.email,
           role: user.role,
         },
-        config.auth?.jwtSecret || config.jwt?.secret || process.env.JWT_SECRET,
+        config.auth.JWTSECRET,
         {
-          expiresIn:
-            config.auth?.jwtExpiresIn || config.jwt?.expiresIn || "24h",
+          expiresIn: config.auth.jwtExpiresIn,
         }
       );
 

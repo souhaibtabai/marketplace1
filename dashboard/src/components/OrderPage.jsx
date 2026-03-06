@@ -235,7 +235,7 @@ const OrderPage = () => {
 
   useEffect(() => {
     fetchOrders();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Apply filters
   const handleApplyFilters = () => {
@@ -605,6 +605,28 @@ const OrderPage = () => {
                           />
                         </svg>
                         Change Status
+                      </button>
+                    )}
+
+                    {order.statut === "IN_PROGRESS" && (
+                      <button
+                        onClick={() => handleCancelOrder(order.id_order)}
+                        className="flex items-center gap-2 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white px-4 py-2 rounded-xl font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300"
+                      >
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M6 18L18 6M6 6l12 12"
+                          />
+                        </svg>
+                        Cancel
                       </button>
                     )}
                   </div>
