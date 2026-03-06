@@ -4,9 +4,6 @@ const CategoriePage = () => {
   const [categories, setCategories] = useState([]);
   const [loadingCategories, setLoadingCategories] = useState(true);
   const [errorCategories, setErrorCategories] = useState(null);
-  const [produitsParCategorie, setProduitsParCategorie] = useState({});
-  const [loadingProduits, setLoadingProduits] = useState({});
-  const [errorProduits, setErrorProduits] = useState({});
 
   // States for category creation/editing
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -168,7 +165,14 @@ const CategoriePage = () => {
           await fetchCategories();
           alert("Category deleted successfully!");
         } else {
-          const error = await response.json();
+          let errorMessage = "Failed to delete category";
+          try {
+            const errorData = await response.json();
+            errorMessage = errorData.message || errorMessage;
+          } catch {
+            // response body not JSON, use default message
+          }
+          alert(`Error: ${errorMessage}`);
         }
       } catch (err) {
         alert(`Error: ${err.message}`);

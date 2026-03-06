@@ -14,7 +14,7 @@ router.use(authenticateUser);
 // GET all orders - MUST be before /:id
 router.get(
   "/orders",
-  authorizeRoles(["admin", "VENDOR"]),
+  authorizeRoles("ADMIN", "VENDOR"),
   OrderController.getAllOrders
 );
 
@@ -28,7 +28,7 @@ router.get("/:id/products", OrderController.getOrderProducts);
 router.patch("/:id/cancel", OrderController.cancelOrder);
 router.patch(
   "/:id/status",
-  authorizeRoles(["admin", "VENDOR"]),
+  authorizeRoles("ADMIN", "VENDOR"),
   OrderController.updateOrderStatus
 );
 router.get("/:id", OrderController.getOrderById);

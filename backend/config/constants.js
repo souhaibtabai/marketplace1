@@ -9,10 +9,10 @@ module.exports = {
     RETURNED: "RETURNED",
   },
   USER_ROLES: {
-    admin: "admin",
-    CLIENT: "client",
-    VENDOR: "vendor",
-    LIVREUR: "livreur",
+    ADMIN: "ADMIN",
+    CLIENT: "CLIENT",
+    VENDOR: "VENDOR",
+    LIVREUR: "LIVREUR",
   },
   PAYMENT_STATUS: {
     PENDING: "PENDING",

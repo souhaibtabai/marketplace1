@@ -108,7 +108,7 @@ export const api = {
   },
 
   getUserOrders: () =>
-    fetch(`${api.baseURL}/orders/my-orders`, {
+    fetch(`${api.baseURL}/myorder`, {
       method: "GET",
       headers: api.getHeaders(),
     }),

@@ -205,7 +205,7 @@ const ProductPage = () => {
         );
       }
 
-      const data = await response.json();
+      await response.json();
       alert("Product created successfully!");
       closeModal();
       fetchProducts();

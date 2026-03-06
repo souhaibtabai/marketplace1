@@ -3,6 +3,8 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const rateLimit = require("express-rate-limit");
 const { sequelize, QueryTypes } = require("../config/database");
+const config = require("../config/environment");
+const db = require("../models");
 
 const router = express.Router();
 
@@ -75,9 +77,8 @@ router.post("/login", loginLimiter, async (req, res) => {
         email: user.email,
         role: user.role,
       },
-      process.env.JWT_SECRET ||
-        "souhaib5ertyrtyuikjhgfdcdzertyjhgbfvdhy5154fvdwcdsg8619v1v6fdb16vd1b63fd1vsdf6b16",
-      { expiresIn: process.env.JWT_EXPIRES_IN || "24h" }
+      config.auth.JWTSECRET,
+      { expiresIn: config.auth.jwtExpiresIn }
     );
 
     // Return success response
@@ -126,13 +127,12 @@ router.post("/business-account-request", async (req, res) => {
       });
     }
 
-    // Create new request
-    const newRequest = await sequelize.create({
+    // Create new request using the model
+    const newRequest = await db.business_account_requests.create({
       email: req.body.email,
       username: req.body.username,
       phone_number: req.body.phone_number,
       company_name: req.body.company_name,
-      business_type: "other",
       requested_role: req.body.requested_role || "VENDOR",
       description: req.body.description,
       address: req.body.address,
@@ -255,8 +255,8 @@ router.post("/register", async (req, res) => {
         email: newUser.email,
         role: newUser.role,
       },
-      process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_EXPIRES_IN || "24h" }
+      config.auth.JWTSECRET,
+      { expiresIn: config.auth.jwtExpiresIn }
     );
 
     // Return success response
