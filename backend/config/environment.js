@@ -31,9 +31,18 @@ const config = {
     password: process.env.DB_PASSWORD || "postgres",
   },
   auth: {
-    JWTSECRET:
-      process.env.JWT_SECRET ||
-      "souhaib5ertyrtyuikjhgfdcdzertyjhgbfvdhy5154fvdwcdsg8619v1v6fdb16vd1b63fd1vsdf6b16",
+    JWTSECRET: (() => {
+      const nodeEnv = process.env.NODE_ENV || "development";
+      const jwtSecret = process.env.JWT_SECRET;
+      
+      // In production, JWT_SECRET must be provided
+      if (nodeEnv === "production" && !jwtSecret) {
+        throw new Error("🚨 CRITICAL: JWT_SECRET environment variable is required in production!");
+      }
+      
+      // In development, use fallback for convenience
+      return jwtSecret || "souhaib5ertyrtyuikjhgfdcdzertyjhgbfvdhy5154fvdwcdsg8619v1v6fdb16vd1b63fd1vsdf6b16";
+    })(),
     jwtExpiresIn: process.env.JWT_EXPIRES_IN || "24h",
   },
 };

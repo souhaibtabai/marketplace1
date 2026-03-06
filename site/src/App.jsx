@@ -35,15 +35,17 @@ const LayoutWrapper = ({ children }) => (
   </PrivateRoute>
 );
 
-// Component to log route changes
+// Component to log route changes (dev-only)
 const RouteLogger = () => {
   const location = useLocation();
   
   useEffect(() => {
-    console.log("🗺️ [App] Route changed");
-    console.log("🔍 [App] Current pathname:", location.pathname);
-    console.log("🔍 [App] Current search:", location.search);
-    console.log("🔍 [App] Full location:", location);
+    if (import.meta.env.DEV) {
+      console.log("🗺️ [App] Route changed");
+      console.log("🔍 [App] Current pathname:", location.pathname);
+      console.log("🔍 [App] Current search:", location.search);
+      console.log("🔍 [App] Full location:", location);
+    }
   }, [location]);
   
   return null;

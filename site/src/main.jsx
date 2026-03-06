@@ -4,7 +4,7 @@ import setupLocatorUI from "@locator/runtime";
 import "./index.css";
 import App from "./App.jsx";
 
-if (process.env.NODE_ENV === "development") {
+if (import.meta.env.DEV) {
   setupLocatorUI();
 }
 
