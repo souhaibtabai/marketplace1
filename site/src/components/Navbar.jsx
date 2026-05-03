@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { ShoppingCart, User, Menu, X, MapPin } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
@@ -12,26 +12,13 @@ const Navbar = () => {
   const { cartCount } = useCart();
 
   const handleAuthClick = () => {
-    console.log("🔍 [Navbar] handleAuthClick triggered");
-    console.log("🔍 [Navbar] isAuthenticated:", isAuthenticated);
-    
     if (isAuthenticated) {
-      console.log("🚪 [Navbar] User is authenticated - logging out");
       logout();
-      console.log("✅ [Navbar] Logout called, navigating to /home");
       navigate("/home");
     } else {
-      console.log("🔑 [Navbar] User not authenticated - navigating to /login");
       navigate("/login");
     }
   };
-  useEffect(() => {
-    console.log("Auth state changed:", {
-      isAuthenticated,
-      user,
-      token: localStorage.getItem("token"),
-    });
-  }, [isAuthenticated, user]);
 
   return (
     <nav className="bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 shadow-2xl border-b border-blue-800 sticky top-0 z-50">
@@ -110,14 +97,9 @@ const Navbar = () => {
                       </span>
                       <a
                         onClick={() => {
-                          console.log("🚪 [Navbar] Dropdown logout clicked");
-                          console.log("🔍 [Navbar] Current user:", user);
-                          console.log("🔍 [Navbar] Current token:", localStorage.getItem("token"));
                           logout();
-                          console.log("✅ [Navbar] Logout called from dropdown");
                           setIsDropdownOpen(false);
                           navigate("/home");
-                          console.log("✅ [Navbar] Navigated to /home");
                         }}
                         className="text-xs text-white/70 cursor-pointer hover:text-white text-left"
                       >
@@ -127,10 +109,8 @@ const Navbar = () => {
                   ) : (
                     <button
                       onClick={() => {
-                        console.log("🔑 [Navbar] Login button clicked from dropdown");
                         setIsDropdownOpen(false);
                         navigate("/login");
-                        console.log("✅ [Navbar] Navigated to /login");
                       }}
                       className="text-white/80 hover:text-white cursor-pointer transition-colors text-sm px-4 py-2 w-full text-left"
                     >
@@ -260,13 +240,8 @@ const Navbar = () => {
                     </span>
                     <button
                       onClick={() => {
-                        console.log("🚪 [Navbar] Mobile logout clicked");
-                        console.log("🔍 [Navbar] Current user:", user);
-                        console.log("🔍 [Navbar] Current token:", localStorage.getItem("token"));
                         logout();
-                        console.log("✅ [Navbar] Logout called from mobile menu");
                         navigate("/home");
-                        console.log("✅ [Navbar] Navigated to /home");
                         setIsMenuOpen(false);
                       }}
                       className="text-xs text-white/70 hover:text-white text-left"

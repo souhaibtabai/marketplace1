@@ -1,5 +1,19 @@
 const { sequelize } = require("../config/database");
-const { ORDER_STATUS } = require("../config/constants");
+const { ORDER_STATUS, USER_ROLES } = require("../config/constants");
+
+// Valid status transitions for the order lifecycle.
+// IN_PROGRESS (newly placed) → PENDING (accepted) → CONFIRMED (payment/processing) → SHIPPED → DELIVERED
+// Any non-terminal status can also be CANCELLED; DELIVERED can be RETURNED.
+// CANCELLED and RETURNED are terminal states with no further transitions.
+const VALID_TRANSITIONS = {
+  [ORDER_STATUS.IN_PROGRESS]: [ORDER_STATUS.PENDING, ORDER_STATUS.CANCELLED],
+  [ORDER_STATUS.PENDING]: [ORDER_STATUS.CONFIRMED, ORDER_STATUS.CANCELLED],
+  [ORDER_STATUS.CONFIRMED]: [ORDER_STATUS.SHIPPED, ORDER_STATUS.CANCELLED],
+  [ORDER_STATUS.SHIPPED]: [ORDER_STATUS.DELIVERED],
+  [ORDER_STATUS.DELIVERED]: [ORDER_STATUS.RETURNED],
+  [ORDER_STATUS.CANCELLED]: [],
+  [ORDER_STATUS.RETURNED]: [],
+};
 
 const validateOrderItems = async (items) => {
   if (!Array.isArray(items) || items.length === 0) {
@@ -43,10 +57,17 @@ class OrderController {
   async createOrder(req, res) {
     const t = await sequelize.transaction();
     try {
-      const { items } = req.body;
+      const { items, shipping_address, notes } = req.body;
       if (!items) {
         return res.status(400).json({ message: "Items are required." });
       }
+      const sanitizedAddress = shipping_address ? shipping_address.trim() : "";
+      if (!sanitizedAddress) {
+        return res
+          .status(400)
+          .json({ message: "Shipping address is required." });
+      }
+      const sanitizedNotes = notes ? notes.trim() : null;
       const validatedItems = await validateOrderItems(items);
 
       const total_prix = validatedItems.reduce(
@@ -55,8 +76,8 @@ class OrderController {
       );
 
       const [order] = await sequelize.query(
-        `INSERT INTO orders (id_utilisateur, items, statut, total_prix) 
-         VALUES (:id_utilisateur, :items, :statut, :total_prix) 
+        `INSERT INTO orders (id_utilisateur, items, statut, total_prix, shipping_address, notes) 
+         VALUES (:id_utilisateur, :items, :statut, :total_prix, :shipping_address, :notes) 
          RETURNING *`,
         {
           replacements: {
@@ -64,6 +85,8 @@ class OrderController {
             items: JSON.stringify(validatedItems),
             statut: ORDER_STATUS.IN_PROGRESS,
             total_prix,
+            shipping_address: sanitizedAddress,
+            notes: sanitizedNotes,
           },
           type: sequelize.QueryTypes.INSERT,
           transaction: t,
@@ -327,6 +350,44 @@ class OrderController {
       if (!Object.values(ORDER_STATUS).includes(statut)) {
         await t.rollback();
         return res.status(400).json({ message: "Invalid status." });
+      }
+
+      // Enforce valid status transitions
+      const allowedNext = VALID_TRANSITIONS[order.statut] || [];
+      if (!allowedNext.includes(statut)) {
+        await t.rollback();
+        return res.status(400).json({
+          message: `Cannot transition from ${order.statut} to ${statut}.`,
+        });
+      }
+
+      // Vendor ownership check: vendor may only update orders that contain their products
+      if (req.user.role === USER_ROLES.VENDOR) {
+        const orderItems = JSON.parse(order.items);
+        const productIds = orderItems.map((i) => i.id_produit);
+
+        const vendorProducts = await sequelize.query(
+          `SELECT p.id_produit 
+           FROM produits p
+           JOIN market m ON p.id_market = m.id_market
+           WHERE p.id_produit IN (:productIds)
+             AND m.id_utilisateur = :vendorId`,
+          {
+            replacements: {
+              productIds,
+              vendorId: req.user.id_utilisateur,
+            },
+            type: sequelize.QueryTypes.SELECT,
+            transaction: t,
+          }
+        );
+
+        if (vendorProducts.length === 0) {
+          await t.rollback();
+          return res.status(403).json({
+            message: "You can only update orders containing your products.",
+          });
+        }
       }
 
       let updateQuery = `UPDATE orders SET statut = :statut`;

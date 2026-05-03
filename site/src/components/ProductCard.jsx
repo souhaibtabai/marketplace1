@@ -15,11 +15,11 @@ const ProductCard = ({ product }) => {
       return;
     }
 
-    const success = await addToCart(product);
-    if (success) {
+    const result = await addToCart(product.id_produit, 1);
+    if (result && result.success) {
       alert("Produit ajouté au panier !");
     } else {
-      alert("Erreur lors de l'ajout au panier");
+      alert(result?.message || "Erreur lors de l'ajout au panier");
     }
   };
 

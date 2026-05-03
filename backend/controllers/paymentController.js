@@ -132,7 +132,7 @@ class PaymentController {
 
       // Check authorization
       if (
-        req.user.role !== "admin" &&
+        req.user.role !== "ADMIN" &&
         req.user.role !== "VENDOR" &&
         payment.id_utilisateur !== req.user.id_utilisateur
       ) {
@@ -204,7 +204,7 @@ class PaymentController {
 
       // Check authorization
       if (
-        req.user.role !== "admin" &&
+        req.user.role !== "ADMIN" &&
         req.user.role !== USER_ROLES.VENDOR &&
         payment.id_utilisateur !== req.user.id_utilisateur
       ) {
@@ -220,7 +220,7 @@ class PaymentController {
 
   async getAllPayments(req, res) {
     try {
-      if (req.user.role !== "admin") {
+      if (req.user.role !== "ADMIN") {
         return res.status(403).json({ message: "Unauthorized access." });
       }
 
