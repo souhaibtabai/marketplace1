@@ -21,7 +21,7 @@ router.patch("/:id/confirm", PaymentController.confirmPayment);
 // Get all payments (admin only)
 router.get(
   "/all",
-  authorizeRoles(["admin"]),
+  authorizeRoles("ADMIN"),
   PaymentController.getAllPayments
 );
 

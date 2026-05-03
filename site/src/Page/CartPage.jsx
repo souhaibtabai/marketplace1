@@ -29,7 +29,7 @@ const CartPage = () => {
           <ul className="divide-y divide-gray-200 mb-6">
             {cart.map((item) => (
               <li
-                key={item.id || item.id_product}
+                key={item.id_cart}
                 className="py-4 flex justify-between items-center"
               >
                 <div>
@@ -40,7 +40,7 @@ const CartPage = () => {
                   <span className="font-bold">{item.price}€</span>
                   <button
                     className="text-red-500 hover:underline"
-                    onClick={() => removeFromCart(item.id || item.id_product)}
+                    onClick={() => removeFromCart(item.id_cart)}
                   >
                     Supprimer
                   </button>
